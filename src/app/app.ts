@@ -1,12 +1,16 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { DoneComponent } from './components/done/done.component';
+import { ProgressComponent } from './components/progress/progress.component';
+import { QuestionPresenterComponent } from './components/question-presenter/question-presenter.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { SharedModule } from './shared/shared-module';
 
 @Component({
+  imports: [SharedModule, QuestionPresenterComponent, ToolbarComponent, ProgressComponent, DoneComponent],
   selector: 'app-root',
-  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('ngrx');
+  protected readonly title = signal('NGRX Store with Signals');
 }

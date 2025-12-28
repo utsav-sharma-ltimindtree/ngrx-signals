@@ -1,4 +1,5 @@
-import { KEYWORD, RGB, rgb, keyword } from 'color-convert/conversions';
+import colorConvert from 'color-convert';
+import { KEYWORD, RGB } from 'color-convert/conversions';
 import namer from 'color-namer';
 import { Question } from '../models/question.model';
 
@@ -57,9 +58,9 @@ export function randomColorQuestion() {
   const colors = randomItems([...KNOWN_COLORS], twoOrThree) as
     | [KEYWORD, KEYWORD]
     | [KEYWORD, KEYWORD, KEYWORD];
-  const rgbs = colors.map((clr) => keyword.rgb(clr));
+  const rgbs = colors.map((clr) => colorConvert.keyword.rgb(clr));
   const added = addRgb(...rgbs);
-  const addedHex = rgb.hex(added);
+  const addedHex = colorConvert.rgb.hex(added);
 
   const htmlCols = namer(addedHex).html;
   const names = htmlCols.map((n) => n.name);
