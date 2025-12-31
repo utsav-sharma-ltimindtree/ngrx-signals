@@ -11,11 +11,23 @@
     color: var(--p-500);
     font-weight: bold;
 
-    mat-icon {
-        width: auto;
-        height: auto;
-        font-size: 40px;
-        color: var(--p-400);
-        margin-inline-end: 10px;
+    .toolbar {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        :first-child {
+            display: flex;
+            align-items: center;
+        }
+        :nth-child(1) {
+            cursor: pointer;
+        }
+        mat-icon {
+            width: auto;
+            height: auto;
+            font-size: 40px;
+            color: var(--p-400);
+            margin-inline-end: 10px;
+        }
     }
 }

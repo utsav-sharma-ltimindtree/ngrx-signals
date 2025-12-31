@@ -1,6 +1,8 @@
-<app-toolbar caption="Colors Quiz!" icon="palette"/>
+<app-toolbar caption="Colors Quiz!" icon="palette" />
 <div class="main">
-    <app-question-presenter/>
-    <app-progress/>
-    <app-done/>
+    <app-question-presenter />
+    <app-progress [value]="quizStore.answers().length" [max]="quizStore.questions().length" />
+    @if(quizStore.isDone()) {
+    <app-done />
+    }
 </div>
