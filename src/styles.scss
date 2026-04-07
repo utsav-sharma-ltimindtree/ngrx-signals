@@ -11,9 +11,9 @@
 @use '@angular/material' as mat;
 
 
-@include core.go();
+@include core.go;
 @include theme.go(pal.$primary, pal.$accent, true);
-@include typography.typography();
+@include typography.typography;
 
 html {
   height: 100%;

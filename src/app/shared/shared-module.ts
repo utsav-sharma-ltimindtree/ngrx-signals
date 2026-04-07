@@ -28,5 +28,6 @@ const shareable: Type<any>[] = [
 @NgModule({
   imports: [shareable],
   exports: [shareable],
+  declarations: [],
 })
 export class SharedModule {}

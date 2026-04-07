@@ -1,5 +1,20 @@
 import { Question } from '../models/question.model';
 
+/**
+ * Validates that all questions have a valid correctIndex.
+ * Throws an error if any question has an invalid correctIndex.
+ */
+function validateQuestions(questions: Question[]): void {
+  questions.forEach((q, index) => {
+    if (q.correctIndex < 0 || q.correctIndex >= q.answers.length) {
+      throw new Error(
+        `Question at index ${index} has invalid correctIndex ${q.correctIndex}. ` +
+        `Must be between 0 and ${q.answers.length - 1}.`
+      );
+    }
+  });
+}
+
 export const QUESTIONS: Question[] = [
   {
     caption: ['red', 'lime', 'blue'],
@@ -42,3 +57,6 @@ export const QUESTIONS: Question[] = [
     correctIndex: 2,
   },
 ];
+
+// Validate questions at module initialization
+validateQuestions(QUESTIONS);

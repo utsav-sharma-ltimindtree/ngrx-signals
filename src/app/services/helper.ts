@@ -1,4 +1,7 @@
-import { KEYWORD, RGB, rgb, keyword } from 'color-convert/conversions';
+import convert from 'color-convert';
+
+type KEYWORD = string;
+type RGB = [number, number, number];
 import namer from 'color-namer';
 import { Question } from '../models/question.model';
 
@@ -19,9 +22,13 @@ export function randomNumber(min: number, max: number, includeMax = false): numb
  * Selects a random element from an array.
  *
  * @param items - The array to pick an element from.
- * @returns The randomly selected element from `items`, or `undefined` if `items` is empty.
+ * @returns The randomly selected element from `items`.
+ * @throws RangeError if `items` is empty.
  */
 export function randomItem<T>(items: T[]): T {
+  if (items.length === 0) {
+    throw new RangeError('randomItem: items must not be empty');
+  }
   const index = randomNumber(0, items.length);
   return items[index];
 }
@@ -32,8 +39,16 @@ export function randomItem<T>(items: T[]): T {
  * @param items - Source array to sample from; the original array is not mutated.
  * @param count - Number of distinct elements to return
  * @returns An array of `count` distinct elements chosen at random. Uniqueness is determined by strict inequality (`!==`).
+ * @throws RangeError if `count` is negative or greater than `items.length`.
  */
 export function randomItems<T>(items: T[], count: number): T[] {
+  if (count < 0) {
+    throw new RangeError('randomItems: count must be non-negative');
+  }
+  if (count > items.length) {
+    throw new RangeError('randomItems: count must not exceed items.length');
+  }
+
   const res: T[] = [];
 
   while (res.length < count) {
@@ -91,17 +106,35 @@ export function randomColorQuestion() {
   const colors = randomItems([...KNOWN_COLORS], twoOrThree) as
     | [KEYWORD, KEYWORD]
     | [KEYWORD, KEYWORD, KEYWORD];
-  const rgbs = colors.map((clr) => keyword.rgb(clr));
+  const rgbs = colors.map((clr) => convert.keyword.rgb(clr));
   const added = addRgb(...rgbs);
-  const addedHex = rgb.hex(added);
+  const addedHex = convert.rgb.hex(added);
 
   const htmlCols = namer(addedHex).html;
   const names = htmlCols.map((n) => n.name);
   const name = names[0];
 
-  const answers = [names[25], names[50], names[75], names[100]];
-  const correctIndex = randomNumber(0, 4);
-  answers[correctIndex] = name;
+  // Pick 3 distinct wrong answer indices (excluding index 0 which is the correct answer)
+  const availableIndices = Array.from({ length: names.length }, (_, i) => i).filter(i => i !== 0);
+  const wrongIndices = randomItems(availableIndices, Math.min(3, availableIndices.length));
+  const wrongAnswers = wrongIndices.map(i => names[i]);
+
+  // Pad with duplicates if we don't have enough names
+  while (wrongAnswers.length < 3) {
+    wrongAnswers.push(wrongAnswers[0] || name);
+  }
+
+  const correctIndex = randomNumber(0, 4) as 0 | 1 | 2 | 3;
+  const answers: [string, string, string, string] = ['', '', '', ''];
+
+  let wrongIdx = 0;
+  for (let i = 0; i < 4; i++) {
+    if (i === correctIndex) {
+      answers[i] = name;
+    } else {
+      answers[i] = wrongAnswers[wrongIdx++];
+    }
+  }
 
   const question: Question = {
     caption: colors,
@@ -300,8 +333,9 @@ export function getColorDisplayNameMap() {
  * Get the user-friendly display name for a CSS/HTML color name.
  *
  * @param color - The CSS/HTML color name (case-insensitive)
- * @returns The display name with spaces and normal casing (e.g., `Light Blue`), or `undefined` if no mapping exists
+ * @returns The display name with spaces and normal casing (e.g., `Light Blue`), or the capitalized input if no mapping exists
  */
-export function displayNameOfColor(color: string) {
-  return COLOR_DISPLAY_NAMES[color.toLowerCase()];
+export function displayNameOfColor(color: string): string {
+  const lowerColor = color.toLowerCase();
+  return COLOR_DISPLAY_NAMES[lowerColor] || color.charAt(0).toUpperCase() + color.slice(1);
 }

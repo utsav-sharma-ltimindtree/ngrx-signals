@@ -3,6 +3,7 @@ import { displayNameOfColor } from '../services/helper';
 
 @Pipe({
   name: 'colorName',
+  standalone: true,
 })
 export class ColorNamePipe implements PipeTransform {
   transform(value: string): string {
