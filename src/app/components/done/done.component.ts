@@ -12,6 +12,9 @@ export class DoneComponent {
 
   readonly total = signal(8);
 
-  readonly score = computed(() => this.correct() / this.total());
+  readonly score = computed(() => {
+    const total = this.total();
+    return total > 0 ? this.correct() / total : 0;
+  });
 
 }
