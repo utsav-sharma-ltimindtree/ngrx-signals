@@ -1,0 +1,6 @@
+<div class="bar" role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="max()" [attr.aria-valuenow]="value()">
+    <div class="fill" [style.width.%]="ratio()*100"></div>
+</div>
+<div class="value">
+    {{value()}} / {{max()}}
+</div>
