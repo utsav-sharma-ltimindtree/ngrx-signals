@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, Input } from '@angular/core';
 import { Question } from '../../models/question.model';
 import { SharedModule } from '../../shared/shared-module';
 
@@ -14,4 +14,8 @@ export class QuestionPresenterComponent {
     answers: ['Red', 'Green', 'Blue', 'Yellow'],
     correctIndex: 3
   });
+
+  @Input() set questionInput(value: Question) {
+    this.question.set(value);
+  }
 }

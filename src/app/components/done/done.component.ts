@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, Input } from '@angular/core';
 import { SharedModule } from '../../shared/shared-module';
 
 @Component({
@@ -12,9 +12,17 @@ export class DoneComponent {
 
   readonly total = signal(8);
 
+  @Input() set setCorrect(value: number) {
+    this.correct.set(value);
+  }
+
+  @Input() set setTotal(value: number) {
+    this.total.set(value);
+  }
+
   readonly score = computed(() => {
-    const total = this.total();
-    return total > 0 ? this.correct() / total : 0;
+    const t = this.total();
+    return t === 0 ? 0 : this.correct() / t;
   });
 
 }
